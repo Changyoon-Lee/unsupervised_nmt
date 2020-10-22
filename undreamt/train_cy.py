@@ -80,17 +80,9 @@ def main_train():
     logging_group.add_argument('--validation_output', metavar='PREFIX', help='output validation translations with the given prefix')
     logging_group.add_argument('--validation_beam_size', type=int, default=0, help='use beam search for validation')
 
-    # pre_trained
-    pre_trained_group = parser.add_argument_group('logging', 'Logging and validation arguments')
-    pre_trained_group.add_argument('--pre_trained', default=False, action='store_true', help='use pre_trained model')
-    pre_trained_group.add_argument('--pre_src2src', default='', help='load pre trained model')
-    pre_trained_group.add_argument('--pre_src2trg', default='', help='load pre trained model')
-    pre_trained_group.add_argument('--pre_trgstrg', default='', help='load pre trained model')
-    pre_trained_group.add_argument('--pre_trg2src', default='', help='load pre trained model')
-
     # Other
     parser.add_argument('--encoding', default='utf-8', help='the character encoding for input/output (defaults to utf-8)')
-    parser.add_argument('--cuda', default=False, action='store_true', help='use cuda')
+    parser.add_argument('--cuda', default=True, action='store_true', help='use cuda')
 
     # Parse arguments
     args = parser.parse_args()
@@ -220,17 +212,6 @@ def main_train():
                                     decoder_embeddings=src_decoder_embeddings, generator=src_generator,
                                     src_dictionary=trg_dictionary, trg_dictionary=src_dictionary, encoder=encoder,
                                     decoder=src_decoder, denoising=not args.disable_denoising, device=device)
-
-    # load saved model
-    if args.pre_trained == True:
-        src2src_translator = torch.load(args.pre_src2src)
-        src2trg_translator = torch.load(args.pre_src2trg)
-        trg2trg_translator = torch.load(args.pre_trg2trg)
-        trg2src_translator = torch.load(args.pre_trg2src)
-
-    print('load')
-
-
 
     # Build trainers
     trainers = []

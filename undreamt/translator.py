@@ -117,7 +117,8 @@ class Translator:
 
         while len(pending) > 0:
             # Each iteration should update: prev_words, hidden, output
-            var = torch.cuda.LongTensor([prev_words], requires_grad=False)
+            var = torch.cuda.LongTensor([prev_words])
+            var.requires_grad_(False)
             logprobs, hidden, output = self.decoder(var, ones, self.decoder_embeddings, hidden, context, context_mask, output, self.generator)
             prev_words = logprobs.max(dim=2)[1].squeeze().data.cpu().numpy().tolist()
 
